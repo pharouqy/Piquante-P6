@@ -19,7 +19,7 @@ exports.singup = (req, res, next) => {
           res.status(400).json({ message: "utilisateur non crée" })
         );
     })
-    .catch((error) => res.status(500).json({ message: "error 3" }));
+    .catch((error) => console.log(error));
 };
 
 exports.login = (req, res, next) => {
