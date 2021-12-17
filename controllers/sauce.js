@@ -94,7 +94,7 @@ exports.likDeslikeSauce = (req, res, next) => {
     case 1:
       Sauce.updateOne(
         { _id: sauceId },
-        { $push: { usersLiked: userId }, $inc: { likes: +1 } }
+        { $push: { usersLiked: userId }, $inc: { likes: 1 } }
       )
         .then(() => res.status(200).json({ message: "j'aime" }))
         .catch((error) => console.log(error));
@@ -104,11 +104,11 @@ exports.likDeslikeSauce = (req, res, next) => {
         .then((sauce) => {
           console.log(sauce);
           if (sauce.usersLiked.includes(userId)) {
-            Sauce.updateOne({_id : sauceId}, {$pull : {usersLiked : userId}, $inc : {like : -1}})
+            Sauce.updateOne({_id : sauceId}, {$pull : {usersLiked : userId}, $inc : {likes : -1}})
               .then(() => res.status(200).json({message : "neutre"}))
               .catch(error => console.log(error));
           } else if (sauce.usersDisliked.includes(userId)) {
-            Sauce.updateOne({_id : sauceId}, {$pull : {usersDisliked : userId}, $inc : {deslike : -1}})
+            Sauce.updateOne({_id : sauceId}, {$pull : {usersDisliked : userId}, $inc : {deslikes : -1}})
               .then(() => res.status(200).json({message : "neutre"}))
               .catch(error => console.log(error));
           }
@@ -118,7 +118,7 @@ exports.likDeslikeSauce = (req, res, next) => {
     case -1:
       Sauce.updateOne(
         { _id: sauceId },
-        { $push: { usersDisliked: userId }, $inc: { likes: -1 } }
+        { $push: { usersDisliked: userId }, $inc: { deslikes: 1 } }
       )
         .then(() => res.status(200).json({ message: "j'aime pas" }))
         .catch((error) => console.log(error));
