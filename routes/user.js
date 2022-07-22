@@ -8,5 +8,4 @@ const emailCtrl = require("../middelware/checkEmail");
 router.post("/login", userCtrlr.login);
 router.post("/signup", emailCtrl, passwordCtrl, userCtrlr.singup);
 
-
 module.exports = router;

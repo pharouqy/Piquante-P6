@@ -1,5 +1,5 @@
 const Sauce = require("../models/sauce");
-const fs = require("fs");
+const fs = require("fs"); // Charger les images dans le server ou dans le dossier images
 
 exports.createSauce = (req, res, next) => {
   //Ajouter une sauce

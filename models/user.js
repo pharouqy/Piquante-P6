@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const uniqueValidator = require("mongoose-unique-validator");
+const uniqueValidator = require("mongoose-unique-validator"); // Avoir un seul utilisateur avec un meme email
 const MongooseErrors = require("mongoose-errors");
 
 const userSchema = mongoose.Schema ({

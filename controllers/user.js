@@ -1,7 +1,7 @@
 //const bcrypt = require("bcrypt");
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
-const CryptoJS = require("crypto-js");
+const CryptoJS = require("crypto-js"); // Crypter l'email dans la base de données
 require('dotenv').config();
 
 const User = require("../models/user");
