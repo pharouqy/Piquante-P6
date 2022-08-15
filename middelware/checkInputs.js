@@ -1,9 +1,9 @@
 module.exports = (req, res, next) => {
-  if (req.method === "PUT" && req.file === undefined) {
+  if (req.method === "PUT" && req.file === undefined) { // si la requête est une requête PUT et qu'il n'y a pas de fichier
     const sauce = req.body;
     const { name, manufacturer, description, mainPepper } = sauce; // ES6 destructuring
     checkInput(req, res, next, name, manufacturer, description, mainPepper);
-  } else {
+  } else { // si la requête est une requête POST ou PUT et qu'il y a un fichier
     const sauce = JSON.parse(req.body.sauce);
     const { name, manufacturer, description, mainPepper } = sauce; // ES6 destructuration
     checkInput(req, res, next, name, manufacturer, description, mainPepper);

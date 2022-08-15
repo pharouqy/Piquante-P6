@@ -10,7 +10,7 @@ const cors = require("cors");
 const sauceRoutes = require("./routes/sauce");
 const userRoutes = require("./routes/user");
 
-const limiter = rateLimit({
+const { limiter } = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
@@ -19,7 +19,7 @@ const limiter = rateLimit({
 
 mongoose
   .connect(
-    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-shard-00-00.d4buf.mongodb.net:27017,cluster0-shard-00-01.d4buf.mongodb.net:27017,cluster0-shard-00-02.d4buf.mongodb.net:27017/${process.env.DB_NAME}?ssl=true&replicaSet=atlas-8i7j0t-shard-0&authSource=admin&retryWrites=true&w=majority`,
+    `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-shard-00-00.d4buf.mongodb.net:27017,cluster0-shard-00-01.d4buf.mongodb.net:27017,cluster0-shard-00-02.d4buf.mongodb.net:27017/${process.env.DB_NAME}?ssl=true&replicaSet=atlas-8i7j0t-shard-0&authSource=admin&retryWrites=true&w=majority`
     //{ useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
@@ -29,10 +29,11 @@ mongoose
 
 const app = express();
 
-app.use(helmet()); // protection des headers
+app.use(helmet()); // protection suplémentaire des headers
 
 // Apply the rate limiting middleware to all requests
-app.use(limiter);
+app.use(limiter); // limite le nombre de requêtes et éviter les attaques (Brute Force & DDOS)
+app.use(express.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -47,7 +48,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors()); // autorisation des requetes cross-origin
+app.use(cors()); // autorisation des requetes cross-origin (sécurisation)
 
 app.use(express.json()); // pour parser les requêtes en JSON
 
