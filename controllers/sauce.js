@@ -91,6 +91,7 @@ exports.likDeslikeSauce = (req, res, next) => {
   let like = req.body.like;
   let userId = req.body.userId;
   let sauceId = req.params.id;
+  console.log(req.body);
   console.log("like number", like);
   console.log("user id", userId);
   console.log("sauce id", sauceId);
@@ -135,6 +136,7 @@ exports.likDeslikeSauce = (req, res, next) => {
         .catch((error) => console.log(error));
       break;
     default:
-      console.log(error);
+      const error = (err) => res.status(400).json({ error: err });
+      error();
   }
 };

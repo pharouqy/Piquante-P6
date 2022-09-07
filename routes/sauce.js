@@ -4,6 +4,7 @@ const router = express.Router();
 const auth = require("../middelware/auth");
 const multer = require("../middelware/multer-config");
 const checkInputs = require("../middelware/checkInputs");
+const restrictLikers = require("../middelware/restrictLikers");
 
 const sauceCtrl = require("../controllers/sauce");
 
@@ -12,6 +13,6 @@ router.get("/", auth, sauceCtrl.getAllSauces);
 router.get("/:id", auth, sauceCtrl.getSauce);
 router.put("/:id", auth, multer, checkInputs, sauceCtrl.updateSauce);
 router.delete("/:id", auth, sauceCtrl.deleteSauce);
-router.post("/:id/like", auth, sauceCtrl.likDeslikeSauce);
+router.post("/:id/like", auth, restrictLikers, sauceCtrl.likDeslikeSauce);
 
 module.exports = router;

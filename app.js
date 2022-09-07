@@ -4,18 +4,10 @@ const mongoose = require("mongoose");
 const helmet = require("helmet");
 require("dotenv").config();
 const path = require("path");
-const rateLimit = require("express-rate-limit"); // Limite le nombre de requêtes et éviter les attaques (Brute Force & DDOS)
 const cors = require("cors");
 
 const sauceRoutes = require("./routes/sauce");
 const userRoutes = require("./routes/user");
-
-const { limiter } = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
 
 mongoose
   .connect(
@@ -31,8 +23,6 @@ const app = express();
 
 app.use(helmet()); // protection suplémentaire des headers
 
-// Apply the rate limiting middleware to all requests
-app.use(limiter); // limite le nombre de requêtes et éviter les attaques (Brute Force & DDOS)
 app.use(express.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
 
 app.use((req, res, next) => {
