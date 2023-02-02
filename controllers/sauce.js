@@ -1,9 +1,10 @@
 const Sauce = require("../models/sauce");
-const fs = require("fs"); // Charger les images dans le server ou dans le dossier images
+const fs = require("fs"); // manipuler les images dans le server ou dans le dossier images
 
 exports.createSauce = (req, res, next) => {
   //Ajouter une sauce
   const sauceObject = JSON.parse(req.body.sauce);
+  console.log("Sauce envoyer :", req.body.sauce, "Sauce parse :", sauceObject);
   delete sauceObject._id;
   const sauce = new Sauce({
     ...sauceObject,
@@ -31,7 +32,12 @@ exports.getAllSauces = (req, res, next) => {
 exports.getSauce = (req, res, next) => {
   //Une sauce
   Sauce.findOne({ _id: req.params.id })
-    .then((sauce) => res.status(200).json(sauce))
+    .then((sauce) => {
+      if (!sauce) {
+        res.status(500).json({ error: "error" });
+      }
+      res.status(200).json(sauce);
+    })
     .catch((error) => console.log(error));
 };
 
@@ -88,14 +94,9 @@ exports.deleteSauce = (req, res, next) => {
 };
 
 exports.likDeslikeSauce = (req, res, next) => {
-  let like = req.body.like;
-  let userId = req.body.userId;
-  let sauceId = req.params.id;
-  console.log(req.body);
-  console.log("like number", like);
-  console.log("user id", userId);
-  console.log("sauce id", sauceId);
-  console.log("Sauce : ", Sauce);
+  let like = req.body.like; // requete number 1 0 -1
+  let userId = req.body.userId; // chaine de caractere du propriétaire du user id
+  let sauceId = req.params.id; // récuperer l'id de la sauce
   switch (like) {
     case 1:
       Sauce.updateOne(
@@ -108,7 +109,6 @@ exports.likDeslikeSauce = (req, res, next) => {
     case 0:
       Sauce.findOne({ _id: sauceId })
         .then((sauce) => {
-          console.log(sauce);
           if (sauce.usersLiked.includes(userId)) {
             Sauce.updateOne(
               { _id: sauceId },
@@ -119,7 +119,7 @@ exports.likDeslikeSauce = (req, res, next) => {
           } else if (sauce.usersDisliked.includes(userId)) {
             Sauce.updateOne(
               { _id: sauceId },
-              { $pull: { usersDisliked: userId }, $inc: { deslikes: -1 } }
+              { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 } }
             )
               .then(() => res.status(200).json({ message: "neutre" }))
               .catch((error) => console.log(error));
@@ -130,7 +130,7 @@ exports.likDeslikeSauce = (req, res, next) => {
     case -1:
       Sauce.updateOne(
         { _id: sauceId },
-        { $push: { usersDisliked: userId }, $inc: { deslikes: 1 } }
+        { $push: { usersDisliked: userId }, $inc: { dislikes: 1 } }
       )
         .then(() => res.status(200).json({ message: "j'aime pas" }))
         .catch((error) => console.log(error));
